@@ -434,8 +434,10 @@ if main_nav == MOD_HOME:
             "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             "Volatility": [2.4, 4.1, 8.5, 9.2, 5.4, 3.1, 2.9]
         })
-        fig_vul = px.line(vul_data, x="Day", y="Volatility", r="Volatility", template=PLOT_THEME)
-        st.plotly_chart(px.line(vul_data, x="Day", y="Volatility", title="7-Day Algo Turbulence", line_shape="spline", template=PLOT_THEME), use_container_width=True)
+        fig_vul = px.line_polar(vul_data, r='Volatility', theta='Day', line_close=True, 
+                                template=PLOT_THEME, title="7-Day Algo Turbulence")
+        fig_vul.update_traces(fill='toself', line_color='#ef4444')
+        st.plotly_chart(fig_vul, use_container_width=True)
         if vul_data['Volatility'].max() > 8:
             st.error("🔥 **High Volatility Detected:** A significant Google update is likely rolling out. Monitor rankings closely.")
             
