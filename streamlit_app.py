@@ -1306,25 +1306,27 @@ elif main_nav == "🤖 AI SEO Co-Pilot":
             dense_cols = st.columns(4)
             dense_cols[0].metric("Entity Coverage", "82%", "+4%")
             dense_cols[1].metric("Topical Depth", "High", "Pass")
-            dense_cols[2].metric("Keyword Cabinibalization", "None", "Pass")
+            dense_cols[2].metric("Keyword Cannibalization", "None", "Pass")
             dense_cols[3].metric("AI Readability", "72.4/100", "Good")
 
     with a_tab2:
         st.subheader("Domain Strategy Quadrant & AI Sweet Spot")
         st.markdown("Visualizing where your keywords sit in the 'Impact vs Effort' matrix and AI ranking potential.")
         if not df.empty:
-            df['Strategy Quadrant'] = pd.cut(df['Keyword Difficulty'], bins=[-1, 30, 70, 101], labels=['Quick Wins', 'Standard Competition', 'High Effort']).astype(str)
+            # Use a working copy to avoid SettingWithCopy warnings and potential sync issues
+            q_df = df.copy()
+            q_df['Strategy Quadrant'] = pd.cut(q_df['Keyword Difficulty'], bins=[-1, 30, 70, 101], labels=['Quick Wins', 'Standard Competition', 'High Effort']).astype(str)
             
             qc1, qc2 = st.columns(2)
             with qc1:
-                fig_quad = px.scatter(df.head(200), x='Keyword Difficulty', y='Volume', color='Strategy Quadrant',
+                fig_quad = px.scatter(q_df.head(200), x='Keyword Difficulty', y='Volume', color='Strategy Quadrant',
                                     hover_name='keyword', size='Volume', template=PLOT_THEME, 
                                     title="Strategic Priority Quadrant")
                 st.plotly_chart(fig_quad, use_container_width=True)
             
             with qc2:
                 st.markdown("#### 🌡️ AI Ranking Sweet Spot")
-                fig_ai_heat = px.density_heatmap(df, x="Keyword Difficulty", y="AI Overview", 
+                fig_ai_heat = px.density_heatmap(q_df, x="Keyword Difficulty", y="AI Overview", 
                                                nbinsx=15, nbinsy=15, color_continuous_scale='Magma',
                                                template=PLOT_THEME, title="Difficulty vs AI Overview Density")
                 st.plotly_chart(fig_ai_heat, use_container_width=True)
@@ -1332,15 +1334,15 @@ elif main_nav == "🤖 AI SEO Co-Pilot":
             st.info("💡 **Decision Engine Tip:** Target the 'Low Difficulty / High AI Score' cluster in the heatmap for the fastest AIO results.")
 
     with a_tab3:
-        st.subheader("✨ AI Dominance Engine (AEO Strategy)")
-        st.markdown("Strategies to rank in the 'Zero-Click' AI search era.")
+        st.subheader("✨ AI Dominance Engine (Multi-Platform AEO)")
+        st.markdown("Strategic blueprints to dominate AI-generated search results across all major platforms.")
         
         # 1. Platform-Wise Optimization Strategy
         st.markdown("#### 🌎 Platform Ranking Matrix")
         strat_df = pd.DataFrame({
-            "Platform": ["Google AIO / Gemini", "ChatGPT (SearchGPT)", "Perplexity AI", "Meta AI"],
-            "Primary Factor": ["Schema & Entity Linking", "Source Citation & Authority", "Real-time Citation & UX", "Social Proof & Community"],
-            "Winning TMU Action": ["Deploy Education Schema", "Build High-DR Brand Mentions", "Optimize for Fact-Dense Bullet Points", "Engage with Alumni on LinkedIn"]
+            "Platform": ["Google AIO", "ChatGPT", "Perplexity", "Apple Intelligence", "Bing Deep Search"],
+            "Primary Factor": ["Schema & Entity Linking", "Source Citation", "Fact Density", "App-to-Web Context", "Page Speed & Depth"],
+            "Winning TMU Action": ["Deploy Education Schema", "Build High-DR Backlinks", "Listicle Content Formats", "Siri Knowledge Connect", "Performance Overhaul"]
         })
         st.dataframe(strat_df, use_container_width=True, hide_index=True)
         
@@ -1348,6 +1350,7 @@ elif main_nav == "🤖 AI SEO Co-Pilot":
         
         # 2. Gold-Tier Keyword Recommender
         st.markdown("#### 🏆 Gold-Tier Keyword Recommendations")
+        st.caption("AI-identified keywords with the highest probability of Top 3 ranking in 30 days.")
         if not df.empty:
             # Recommending keywords: High Volume (>500) and Moderate Difficulty (<50)
             gold_df = df[(df['Volume'] > 500) & (df['Keyword Difficulty'] < 50)].sort_values(by='Volume', ascending=False).head(5)
@@ -1355,27 +1358,27 @@ elif main_nav == "🤖 AI SEO Co-Pilot":
                 for idx, row in gold_df.iterrows():
                     with st.container():
                         c1, c2, c3 = st.columns([2, 1, 1])
-                        c1.markdown(f"🌟 **{row['keyword'].upper()}**")
-                        c2.caption(f"Volume: {row['Volume']}")
-                        c3.caption(f"KD: {row['Keyword Difficulty']}%")
-                        st.markdown(f"- **Why this?** Perfect balance of high intent and achievable ranking. Ideal for the {row['Market Segment']} cluster.")
-                st.success("💡 **AIO Strategy:** Optimize these keywords with 'Direct Answer' H2 tags to snap up the AI Overview header.")
+                        c1.markdown(f"🌟 **{str(row['keyword']).upper()}**")
+                        c2.caption(f"Volume: {int(row['Volume'])}")
+                        c3.caption(f"Difficulty: {int(row['Keyword Difficulty'])}%")
+                        st.markdown(f"- **AI Insight:** High topical relevance for TMU. Recommended for 'Direct Answer' targeting.")
+                st.success("💡 **System Suggestion:** These keywords represent your 'Big Moves'. Allocate 40% of Q1 content budget here.")
             else:
                 st.info("No Gold-Tier opportunities found in current dataset filter. Try uploading more keywords.")
         
         st.divider()
         
         # 3. How to Rank (AIO Checklist)
-        st.markdown("#### 🛠️ AI Overview Ranking Checklist")
+        st.markdown("#### 🛠️ AI Dominance Checklist (How to Rank)")
         chk_col1, chk_col2 = st.columns(2)
         with chk_col1:
-            st.markdown("- [ ] **Answer First**: Move direct answers to the top 100 words.")
-            st.markdown("- [ ] **Table Schema**: Structure 'Fee Details' or 'Syllabus' as HTML tables.")
-            st.markdown("- [ ] **Fact Density**: Use specific numbers (e.g., '14:1 faculty ratio' vs 'good faculty').")
+            st.markdown("- [ ] **Conversational H2s**: Use questions like 'How much is TMU fees?'")
+            st.markdown("- [ ] **Bulletized Summaries**: AI bots love 3-5 item lists.")
+            st.markdown("- [ ] **JSON-LD Clusters**: Connect Course nodes to University nodes.")
         with chk_col2:
-            st.markdown("- [ ] **Expert Citation**: Link to faculty profiles with Google Scholar IDs.")
-            st.markdown("- [ ] **Entity Linking**: Mention 'NAAC A+', 'UGC', and 'AICTE' in proximity.")
-            st.markdown("- [ ] **User Feedback**: Include 'Pros & Cons' from verified student reviews.")
+            st.markdown("- [ ] **External Validation**: Mention NAAC/UGC status on every page.")
+            st.markdown("- [ ] **Author Entity**: Link content to Dean/Professor profiles.")
+            st.markdown("- [ ] **Core Web Vitals**: Faster pages get cited more by Perplexity.")
 
 elif main_nav == "📈 Reporting & Site Scores":
     st.title("📈 TMU SEO Health & Performance Reports")
