@@ -319,6 +319,7 @@ with st.sidebar:
         "🔗 Authority & Outreach",
         "⚔️ Competitive & Entity IQ",
         "🤖 AI SEO Co-Pilot",
+        "💎 Enterprise Lead Intelligence",
         "📈 Reporting & Site Scores",
         "📍 TMU Local & Admissions",
         "🛠️ Task & Team Workflow"
@@ -1379,6 +1380,82 @@ elif main_nav == "🤖 AI SEO Co-Pilot":
             st.markdown("- [ ] **External Validation**: Mention NAAC/UGC status on every page.")
             st.markdown("- [ ] **Author Entity**: Link content to Dean/Professor profiles.")
             st.markdown("- [ ] **Core Web Vitals**: Faster pages get cited more by Perplexity.")
+
+elif main_nav == "💎 Enterprise Lead Intelligence":
+    st.title("💎 Enterprise Lead & Authority Intelligence")
+    st.markdown("Advanced techniques used by NAAC A+ organizations to capture high-intent leads and dominate semantic search.")
+    
+    l_tab1, l_tab2, l_tab3, l_tab4 = st.tabs(["📱 Social Search SEO", "🎓 EEAT Authority Vault", "📉 Content Decay Radar", "🎯 Lead Conversion Lab"])
+    
+    with l_tab1:
+        st.subheader("YouTube & Social Search Optimization")
+        st.markdown("Ranking for educational queries on platforms where students actually search.")
+        
+        s_col1, s_col2 = st.columns(2)
+        with s_col1:
+            st.markdown("#### 🔍 Trending Social Keywords (EDU)")
+            social_kw = pd.DataFrame({
+                "Keyword": ["TMU Hostel Life", "Day in life medical student", "MBBS Moradabad Review", "B.Tech placement 2024", "TMU NAAC A+ reaction"],
+                "Platform": ["YouTube", "Instagram", "TikTok/YouTube", "LinkedIn", "YouTube"],
+                "Search Velocity": ["Very High", "High", "Critical", "Medium", "High"]
+            })
+            st.dataframe(social_kw, use_container_width=True, hide_index=True)
+        
+        with s_col2:
+            st.info("💡 **Expert Strategy:** Create short-form video content answering 'MBBS Moradabad Review'. Ranking #1 here drives 4x more leads than a standard blog post.")
+            st.button("Generate Social SEO Script Outline")
+            
+    with l_tab2:
+        st.subheader("🎓 EEAT & Faculty Entity Authority")
+        st.markdown("Leveraging 'Experience, Expertise, Authoritativeness, and Trust' (E-E-A-T) to boost institutional rankings.")
+        
+        e_col1, e_col2 = st.columns([2, 1])
+        with e_col1:
+            st.markdown("#### 🏛️ Faculty Digital Trust Score")
+            faculty_data = pd.DataFrame({
+                "Faculty Name": ["Dr. R.K. Jain", "Prof. Amit Sharma", "Dr. Seema Gupta"],
+                "Scholar Citations": [1240, 850, 420],
+                "Entity Trust": [94, 88, 72],
+                "SEO Impact": ["Primary Anchor", "High Influence", "Emerging Author"]
+            })
+            st.dataframe(faculty_data, use_container_width=True, hide_index=True, column_config={
+                "Entity Trust": st.column_config.ProgressColumn(min_value=0, max_value=100)
+            })
+            
+        with e_col2:
+            st.success("🎯 **Strategic Linkage:** Linking Professor Jain's ResearchGate profile to the Medical Admission page boosted rankings by 4 positions.")
+            
+    with l_tab3:
+        st.subheader("📉 Content Decay & Renewal Radar")
+        st.markdown("Identifying once-peak pages that are losing traffic and need 'Freshness' updates.")
+        
+        decay_df = pd.DataFrame({
+            "Page URL": ["/admission-2023", "/engineering-syllabus-v1", "/medical-cutoff-old"],
+            "Traffic Peak": ["June 2023", "Aug 2023", "May 2023"],
+            "Current Drop": ["-84%", "-42%", "-91%"],
+            "Action": ["Redirect to 2024", "Update Content", "Delete/Merge"]
+        })
+        st.dataframe(decay_df, use_container_width=True, hide_index=True)
+        st.warning("⚠️ **Alert:** 12% of TMU traffic is currently coming from decaying pages. Update required to maintain authority.")
+
+    with l_tab4:
+        st.subheader("🎯 Lead Conversion Optimization (CRO)")
+        st.markdown("Analyzing which UI elements are actually driving admissions.")
+        
+        cro_m1, cro_m2, cro_m3 = st.columns(3)
+        cro_m1.metric("Apply Now CTR", "4.2%", "+0.5%")
+        cro_m2.metric("Brochure Downloads", "1.2k", "+12%")
+        cro_m3.metric("Chatbot Engagement", "18%", "-2%")
+        
+        st.divider()
+        st.markdown("#### 🗺️ CTA Performance Heatmap (Theoretical)")
+        # Heatmap simulation
+        fig_heat = px.imshow([[1, 5, 10], [2, 8, 15], [3, 12, 20]], 
+                            labels=dict(x="Section", y="Scroll Depth", color="Clicks"),
+                            x=['Left Nav', 'Hero Button', 'Footer'],
+                            y=['Top 10%', 'Mid 50%', 'Bottom 100%'],
+                            template=PLOT_THEME, title="Click Density by Page Location")
+        st.plotly_chart(fig_heat, use_container_width=True)
 
 elif main_nav == "📈 Reporting & Site Scores":
     st.title("📈 TMU SEO Health & Performance Reports")
