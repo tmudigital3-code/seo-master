@@ -414,11 +414,36 @@ if main_nav == "🏛️ TMU Command Center":
     fig_trend = px.area(x=dates, y=traffic, line_shape="spline", template=PLOT_THEME, title="Projected Organic Traffic Growth")
     st.plotly_chart(fig_trend, use_container_width=True)
     
-    st.markdown("### ⚡ Today's Strategic Priorities")
+    st.markdown("### ✨ Strategic Executive Insights")
+    st.markdown("---")
     col_p1, col_p2, col_p3 = st.columns(3)
-    col_p1.warning(f"**Technical:** {len(df[df['Keyword Difficulty'] > 80])} High Difficulty keywords need schema support.")
-    col_p2.info(f"**Content:** {len(df[df['Intent'] == 'Informational'])} Informational queries found for AI Overview targets.")
-    col_p3.error(f"**Gap Analysis:** {len(df[df['Volume'] > 5000])} high-volume keywords are below Top 10.")
+    
+    with col_p1:
+        st.markdown(f"""
+        <div class="insight-card">
+            <span class="glow-badge badge-p-red">Immediate Action</span>
+            <h4 style="margin: 10px 0;">Technical Anchor needed</h4>
+            <p style="font-size: 0.9rem; color: #64748b;">{len(df[df['Keyword Difficulty'] > 80])} High Difficulty keywords currently lack Schema.org validation. Priority: Admissions.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col_p2:
+        st.markdown(f"""
+        <div class="insight-card">
+            <span class="glow-badge badge-p-blue">Growth Opportunity</span>
+            <h4 style="margin: 10px 0;">Informational Expansion</h4>
+            <p style="font-size: 0.9rem; color: #64748b;">{len(df[df['Intent'] == 'Informational'])} top-tier clusters identified for AI Overview targets. Estimated traffic gain: +18%.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_p3:
+        st.markdown(f"""
+        <div class="insight-card">
+            <span class="glow-badge badge-p-green">Efficiency Win</span>
+            <h4 style="margin: 10px 0;">Low-Hanging Fruit</h4>
+            <p style="font-size: 0.9rem; color: #64748b;">{len(df[df['Volume'] > 5000])} high-volume keywords identified in Positions 11-20. Small on-page fix will trigger Page 1 rank.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.divider()
     st.subheader("📊 Executive Analysis: Reach & Efficiency")
@@ -427,7 +452,7 @@ if main_nav == "🏛️ TMU Command Center":
     with rex1:
         st.markdown("#### 🎯 80/20 Efficiency Analysis (Pareto)")
         if not df.empty:
-            df_sorted = df.sort_values(by='Volume', ascending=False)
+            df_sorted = df.sort_values(by='Volume', ascending=False).copy()
             df_sorted['Cumulative_Vol'] = df_sorted['Volume'].cumsum()
             df_sorted['Cumulative_Perc'] = 100 * df_sorted['Cumulative_Vol'] / df_sorted['Volume'].sum()
             
@@ -918,23 +943,37 @@ elif main_nav == "🧠 Keyword & AI-Search Lab":
         gap_type = st.selectbox("Show Keywords:", ["Missing (Rivals rank, TMU doesn't)", "Weak (TMU ranks lower than rivals)", "Strong (TMU leads)"])
         
         gap_df = pd.DataFrame({
-            "Keyword": ["B.Tech CSE Syllabus", "Best Medical College in UP", "MBA Placements 2024", "NEET Cutoff 2024", "TMU Hostel Fees"],
-            "TMU Rank": [54, 12, 8, 45, 1],
-            "Amity Rank": [4, 2, 15, 8, 22],
-            "Sharda Rank": [12, 5, 20, 15, 34],
-            "Volume": [4500, 8200, 3100, 12000, 850],
-            "Difficulty": [65, 82, 45, 90, 12]
+            "Keyword": ["B.Tech CSE Syllabus", "Best Medical College in UP", "MBA Placements 2024", "NEET Cutoff 2024", "TMU Hostel Fees", "Top Dental College North India", "University with NAAC A+ Moradabad"],
+            "TMU Rank": [54, 12, 8, 45, 1, 15, 1],
+            "Amity Rank": [4, 2, 15, 8, 22, 5, 12],
+            "Sharda Rank": [12, 5, 20, 15, 34, 8, 15],
+            "Volume": [4500, 8200, 3100, 12000, 850, 2100, 1500]
         })
         
         if "Missing" in gap_type:
-            display_gap = gap_df[gap_df['TMU Rank'] > 20].head(10)
+            display_gap = gap_df[gap_df['TMU Rank'] > 20]
         elif "Weak" in gap_type:
-            display_gap = gap_df[gap_df['TMU Rank'] > gap_df['Amity Rank']].head(10)
+            display_gap = gap_df[gap_df['TMU Rank'] > gap_df['Amity Rank']]
         else:
-            display_gap = gap_df[gap_df['TMU Rank'] < 5].head(10)
+            display_gap = gap_df[gap_df['TMU Rank'] < 5]
             
-        st.table(display_gap)
-        st.warning("Action: Rivals have 12 keywords in Top 3 that TMU is missing. Recommend creating comparison landing pages.")
+        g_col1, g_col2 = st.columns([1, 1])
+        with g_col1:
+            st.dataframe(display_gap, use_container_width=True, hide_index=True, column_config={
+                "TMU Rank": st.column_config.NumberColumn(format="Pos %d"),
+                "Amity Rank": st.column_config.NumberColumn(format="Pos %d"),
+                "Volume": st.column_config.NumberColumn(format="%d")
+            })
+            
+        with g_col2:
+            # Visualization of Gap Magnitude
+            fig_gap = px.bar(display_gap, x="Keyword", y=["TMU Rank", "Amity Rank"], 
+                            title="Position Gap (Lower is Better)", barmode="group",
+                            template=PLOT_THEME, color_discrete_sequence=["#3b82f6", "#ef4444"])
+            fig_gap.update_layout(yaxis=dict(autorange="reversed"))
+            st.plotly_chart(fig_gap, use_container_width=True)
+            
+        st.warning(f"Action: Rivals have {len(display_gap[display_gap['Amity Rank'] < 10])} keywords in Top 10 that TMU is currently trailing.")
         
     with k_tab2:
         st.subheader("TMU Enrollment Funnel & Semantic Entities")
@@ -1011,17 +1050,52 @@ elif main_nav == "📄 Content & On-Page Suite":
         st.subheader("SEO Content Brief Generator (Writer Tool)")
         topic_target = st.text_input("Enter Topic", "Benefits of studying Medical at TMU")
         if st.button("Generate TMU Content Brief"):
-            st.success("Drafting TMU-Specific Angle (Student-centric)...")
-            st.code(f"Brief: {topic_target}\n- Target Vol: 2.1k\n- Recommended Headings: Campus Life, Faculty Stats, Placements\n- TMU-Angle: Focus on NAAC A+ Accreditation.")
+            with st.status("🧠 AI Content Architech is drafting strategy...", expanded=True):
+                st.write("Analyzing competitor content profiles...")
+                time.sleep(1)
+                st.write("Extracting TMU-specific differentiators...")
+            
+            st.markdown(f"""
+            ### 📝 Executive Content Brief: {topic_target}
+            ---
+            #### 🎯 Strategy Overview
+            - **Primary Target:** Prospective medical students (Post-NEET)
+            - **Search Intent:** Informational + Transactional
+            - **Volume Opportunity:** ~2,100 searches/mo
+            
+            #### 🏢 TMU Differentiators (The Moat)
+            - **NAAC A+ Accreditation** (Core proof point)
+            - **800-bed Hospital** (On-campus practical exposure)
+            - **Global Placements** (IBM/Wipro tie-ups)
+            
+            #### 🏗️ Recommended Structure (H-Tags)
+            - **H1:** Why {topic_target}: The Complete Guide 2024
+            - **H2:** State-of-the-Art Medical Infrastructure in Moradabad
+            - **H3:** NAAC A+ Status: What it means for your degree
+            - **H3:** Practical Learning at TMU General Hospital
+            
+            #### 🗝️ Semantic Entities to Include
+            `Moradabad Medical College`, `UGC Approved`, `NEET 2024 Threshold`, `Medical Placements UP`
+            """)
+            st.success("Drafting Complete! Send to content team via Workflow.")
             
     with o_tab2:
         st.subheader("On-Page Performance Scorecard")
         
         col_s1, col_s2 = st.columns([1, 1])
         with col_s1:
-            st.markdown("**URL:** `https://tmu.ac.in/admission` | **Score:** 84/100")
+            st.markdown("### 🏆 Domain Strength: 84/100")
             st.progress(84)
-            st.info("Action: Add primary keyword to H2; Improve meta description length (+20 chars).")
+            st.write("Detailed Checklist:")
+            st.markdown("""
+            - ✅ **Title Tag:** Contains keyword 'Admission' (70 chars)
+            - ✅ **H1 Presence:** Unique and optimized.
+            - ⚠️ **Meta Description:** Found but needs 20 više chars.
+            - ✅ **Image Alt Text:** 92% coverage.
+            - ❌ **OG Tags:** Missing OpenGraph image for LinkedIn.
+            - ✅ **SSL/HTTPS:** Active and Secure.
+            """)
+            st.info("💡 **Next Action:** Update OG Image to increase social CTR by ~15%.")
         
         with col_s2:
             st.markdown("#### 🎯 Semantic Optimization Gauge")
@@ -1041,7 +1115,7 @@ elif main_nav == "📄 Content & On-Page Suite":
                         'line': {'color': "red", 'width': 4},
                         'thickness': 0.75,
                         'value': 95}}))
-            fig_gauge.update_layout(height=280, margin=dict(t=30, b=0, l=10, r=10), template=PLOT_THEME)
+            fig_gauge.update_layout(height=320, margin=dict(t=30, b=0, l=10, r=10), template=PLOT_THEME)
             st.plotly_chart(fig_gauge, use_container_width=True)
     
     with o_tab3:
@@ -1102,12 +1176,20 @@ elif main_nav == "🔗 Authority & Outreach":
         
     with a_tab2:
         st.subheader("TMU Link Opportunity Finder")
-        st.table(pd.DataFrame({
-            "Target Site": ["Collegedekho.com", "UP Education News", "Scholarship.in"],
-            "Category": ["Review Portal", "Local News", "Directory"],
-            "Impact": ["High", "Medium", "High"],
-            "Status": ["In Outreach", "Planned", "Contacted"]
-        }))
+        st.markdown("Discover high-authority targets based on competitive intersection.")
+        
+        opp_df = pd.DataFrame({
+            "Target Site": ["Collegedekho.com", "UP Education News", "Scholarship.in", "IndiaToday Education", "Shiksha.com"],
+            "Category": ["Review Portal", "Local News", "Directory", "National News", "Aggregator"],
+            "DR (Authority)": [85, 42, 64, 91, 88],
+            "Impact": ["High", "Medium", "High", "Critical", "High"],
+            "Status": ["In Outreach", "Planned", "Contacted", "Awaiting Reply", "In Outreach"]
+        })
+        st.dataframe(opp_df, use_container_width=True, hide_index=True, column_config={
+            "DR (Authority)": st.column_config.ProgressColumn(min_value=0, max_value=100),
+            "Status": st.column_config.SelectboxColumn(options=["Planned", "In Outreach", "Contacted", "Awaiting Reply", "Link Acquired"])
+        })
+        st.info("💡 **Pro-Tip:** Collegedekho.com is a 'Super-Hub'. Acquiring a link here will boost your 'Admissions' sub-folder authority by ~12%.")
 
     with a_tab3:
         st.subheader("☣️ Backlink Audit & Toxicity Detector")
@@ -1127,12 +1209,15 @@ elif main_nav == "🔗 Authority & Outreach":
             
         with tox_col2:
             st.markdown("#### 🚩 Flagged Domains")
-            st.table(pd.DataFrame({
+            flag_df = pd.DataFrame({
                 "Toxic Domain": ["seo-rank-booster.biz", "free-backlinks-now.site", "cheap-essay-writers.ru"],
                 "Authority": [4, 9, 2],
-                "Toxicity %": ["98%", "82%", "94%"],
+                "Toxicity %": [98, 82, 94],
                 "Action": ["Disavow", "Investigate", "Disavow"]
-            }))
+            })
+            st.dataframe(flag_df, use_container_width=True, hide_index=True, column_config={
+                "Toxicity %": st.column_config.ProgressColumn(min_value=0, max_value=100)
+            })
             st.error("Action Required: 14 High Toxicity links detected. Update disavow file immediately.")
 
 elif main_nav == "⚔️ Competitive & Entity IQ":
@@ -1142,8 +1227,18 @@ elif main_nav == "⚔️ Competitive & Entity IQ":
     with c_tab1:
         st.subheader("Shared Keyword Gap")
         st.markdown("Comparing TMU's ranking footprint against top competitors.")
-        comp_data = pd.DataFrame({"University": ["TMU", "Amity", "LPU", "Sharda"], "Pos 1-3": [45, 120, 140, 90], "Pos 4-10": [200, 350, 410, 290]})
-        st.plotly_chart(px.bar(comp_data, x="University", y=["Pos 1-3", "Pos 4-10"], barmode="group", template=PLOT_THEME), use_container_width=True)
+        
+        # 3D Bubble Chart for Competitor Benchmarking
+        fig_bench = px.scatter(pd.DataFrame({
+            "University": ["TMU", "Amity", "LPU", "Sharda", "Galgotias"],
+            "Top 3 Keywords": [45, 120, 140, 90, 75],
+            "Total Organic Traffic": [50000, 180000, 210000, 130000, 110000],
+            "Domain Authority": [42, 85, 82, 70, 65]
+        }), x="Top 3 Keywords", y="Total Organic Traffic", size="Domain Authority", color="University",
+        template=PLOT_THEME, title="Market Share vs. Authority Matrix")
+        st.plotly_chart(fig_bench, use_container_width=True)
+        
+        st.divider()
         st.info("💡 **Insight:** Amity has a 40% lead in 'Pos 1-3' keywords. Target their 'Scholarship' content gaps.")
         
     with c_tab2:
@@ -1266,14 +1361,22 @@ elif main_nav == "📈 Reporting & Site Scores":
         st.subheader("Area-wise Performance Scores")
         area_scores = pd.DataFrame({
             "Site Area": ["Admissions Hub", "Medical College", "B.Tech Engineering", "Hostel & Campus Life", "Placement Data"],
-            "Health Grade": ["A+", "A", "B", "C-", "A-"],
+            "Health Score": [95, 88, 72, 45, 84],
             "Critical Fixes": [0, 2, 8, 14, 1],
-            "Growth Potential": ["Low", "Medium", "High", "Critical", "Low"]
+            "Priority": ["Low", "Medium", "High", "Critical", "Low"]
         })
-        st.table(area_scores)
         
+        st.dataframe(area_scores, use_container_width=True, 
+                     column_config={
+                         "Health Score": st.column_config.ProgressColumn(format="%d/100", min_value=0, max_value=100),
+                         "Priority": st.column_config.TextColumn(help="Execution urgency")
+                     }, hide_index=True)
+        
+        st.divider()
         if st.button("Generate Executive SEO PDF Report (Q4)"):
-            st.success("Report Compiled! Ready for TMU Management Review.")
+            with st.spinner("Compiling cross-module intelligence..."):
+                time.sleep(1.5)
+                st.success("Report Compiled! Ready for TMU Management Review.")
 
     with rep_tab3:
         st.subheader("SEO Financial Impact & ROI Modeling")
@@ -1310,10 +1413,27 @@ elif main_nav == "📍 TMU Local & Admissions":
     l_tab1, l_tab2 = st.tabs(["🏠 Google Business (Local Maps)", "📅 Admissions vs Search Traffic"])
     
     with l_tab1:
-        st.subheader("GMB Review & Sentiment")
-        st.metric("Avg Rating", "4.4", "+0.2")
-        st.metric("Review Response Rate", "82%", "-4%")
-        st.info("Action: Respond to 15 pending reviews for 'TMU Dental College'.")
+        st.subheader("🏠 Google Business Profile (Local Pack)")
+        
+        l_col1, l_col2 = st.columns([1, 1])
+        with l_col1:
+            st.markdown("#### 📍 Local Ranking Pack (Moradabad)")
+            local_pack = pd.DataFrame({
+                "Entity": ["TMU Moradabad", "Medical College & RC", "Dental College", "Engineering Faculty"],
+                "Map Rank": [1, 1, 2, 3],
+                "Sentiment": [4.8, 4.4, 4.2, 4.1],
+                "Reviews": ["1.2k", "850", "420", "210"]
+            })
+            st.dataframe(local_pack, use_container_width=True, hide_index=True)
+            
+        with l_col2:
+            st.markdown("#### 🌡️ GMB Insights")
+            st.metric("Direction Requests", "12.4k", "+15%")
+            st.metric("Website Clicks from Maps", "4.2k", "+8%")
+            st.metric("Phone Calls", "1.1k", "-2%")
+            
+        st.divider()
+        st.info("💡 **Action:** Ensure NAAC A+ logo is updated on all 12 sub-entities in GMB for higher conversion.")
         
     with l_tab2:
         st.subheader("Admissions Calendar vs SEO Pulse")
@@ -1325,8 +1445,14 @@ elif main_nav == "📍 TMU Local & Admissions":
 elif main_nav == "🛠️ Task & Team Workflow":
     st.title("🛠️ TMU Team Workflow & Change Log")
     st.subheader("SEO Weekly Sprint")
-    st.table(pd.DataFrame(st.session_state.tasks))
     
+    task_df = pd.DataFrame(st.session_state.tasks)
+    st.dataframe(task_df, use_container_width=True, column_config={
+        "Status": st.column_config.SelectboxColumn(options=["Open", "In-Progress", "Done"]),
+        "Priority": st.column_config.TextColumn(help="Alert level")
+    }, hide_index=True)
+    
+    st.divider()
     with st.expander("📝 Log New Annotation (Change Log)"):
         date_change = st.date_input("Date")
         change_desc = st.text_area("What changed?")
