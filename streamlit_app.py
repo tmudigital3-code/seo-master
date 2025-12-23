@@ -11,6 +11,10 @@ import time
 import sqlite3
 from datetime import datetime
 from PIL import Image
+import requests
+from bs4 import BeautifulSoup
+import re
+from collections import Counter
 
 # --- Asset Management ---
 LOGO_PATH = r"f:\Aradhy\pycham\seo track\logo small black.png"
@@ -914,7 +918,62 @@ Sitemap: https://tmu.ac.in/sitemap.xml
 
 elif main_nav == "🧠 Keyword & AI-Search Lab":
     st.title("🧠 Keyword, Intent & AI-Search Lab")
-    k_tab1, k_tab2, k_tab3, k_tab4 = st.tabs(["🗝️ Topical Authority", "🎯 Funnel & Entity IQ", "🤖 AEO Optimizer", "⚔️ Keyword Gap"])
+    k_tab1, k_tab2, k_tab3, k_tab4, k_tab5 = st.tabs(["🗝️ Topical Authority", "🎯 Funnel & Entity IQ", "🤖 AEO Optimizer", "⚔️ Keyword Gap", "🕵️ Competitor Scraper Lab"])
+    
+    with k_tab5:
+        st.subheader("🕵️ Real-time Competitor Keyword Scraper")
+        st.markdown("Extract keywords directly from any URL without using expensive APIs.")
+        
+        target_link = st.text_input("Enter Competitor/Target URL:", "https://www.tmu.ac.in/medical-college-and-research-centre")
+        
+        if st.button("🕷️ Scrape & Analyze Keywords"):
+            try:
+                with st.spinner(f"Crawling {target_link}..."):
+                    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+                    response = requests.get(target_link, headers=headers, timeout=10)
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    
+                    # Extract Metadata
+                    title = soup.title.string if soup.title else "No Title Found"
+                    meta_desc = soup.find('meta', attrs={'name': 'description'})
+                    description = meta_desc['content'] if meta_desc else "No Description Found"
+                    
+                    # Extract H-Tags
+                    h1s = [h.get_text().strip() for h in soup.find_all('h1')]
+                    h2s = [h.get_text().strip() for h in soup.find_all('h2')]
+                    
+                    # Extract Text & Tokenize for Keywords
+                    text = soup.get_text()
+                    words = re.findall(r'\w+', text.lower())
+                    
+                    # Basic Stopwords
+                    stop_words = set(['the', 'and', 'to', 'of', 'in', 'is', 'for', 'a', 'with', 'on', 'at', 'by', 'an', 'be', 'this', 'that', 'our', 'your', 'we', 'are', 'it', 'from', 'or', 'as', 'has', 'will', 'can', 'more', 'about', 'our', 'best', 'top', 'new'])
+                    filtered_words = [w for w in words if w not in stop_words and len(w) > 3]
+                    
+                    common_keywords = Counter(filtered_words).most_common(10)
+                    
+                    st.success("Target Page Analyzed!")
+                    
+                    sc1, sc2 = st.columns(2)
+                    with sc1:
+                        st.markdown("#### 📄 Page Architecture")
+                        st.write(f"**Title:** {title}")
+                        st.write(f"**Description:** {description}")
+                        st.write(f"**Main Header (H1):** {h1s[0] if h1s else 'Missing'}")
+                    
+                    with sc2:
+                        st.markdown("#### 🔑 Keyword Frequency")
+                        kw_df = pd.DataFrame(common_keywords, columns=['Keyword', 'Frequency'])
+                        st.dataframe(kw_df, use_container_width=True, hide_index=True)
+                        
+                    st.divider()
+                    st.markdown("#### 🧠 AI-Guided SEO Advice")
+                    top_kw = common_keywords[0][0] if common_keywords else "N/A"
+                    st.info(f"💡 **Insight:** This page is heavily optimized for **'{top_kw}'**. To outrank it, the SEO team should target long-tail variants like **'{top_kw} ranking factors'** or **'{top_kw} review 2025'**.")
+                    
+            except Exception as e:
+                st.error(f"Scraping Failed: {e}")
+                st.warning("The target site might be blocking automated requests. Try a different URL or check your internet connection.")
     
     with k_tab1:
         st.subheader("Keyword Topical Clustering")

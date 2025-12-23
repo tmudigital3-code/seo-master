@@ -8,3 +8,5 @@ scikit-learn
 graphviz
 numpy
 Pillow
+requests
+beautifulsoup4
