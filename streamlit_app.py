@@ -66,98 +66,135 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
     
     :root {
-        --primary: #3b82f6;
-        --primary-glow: rgba(59, 130, 246, 0.4);
-        --bg: #f8fafc;
-        --card-bg: rgba(255, 255, 255, 0.9);
+        --primary: #6366f1;
+        --secondary: #10b981;
+        --accent: #f59e0b;
+        --primary-glow: rgba(99, 102, 241, 0.4);
+        --bg: #fdfdfd;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --sidebar-bg: #ffffff;
     }
 
     .stApp {
-        background-color: var(--bg);
+        background: radial-gradient(circle at 10% 20%, #f1f5f9 0%, #ffffff 100%);
         font-family: 'Outfit', sans-serif;
     }
     
-    /* Premium Glass Cards */
+    /* Premium Glass Cards with Gradient Borders */
     div[data-testid="stMetric"], .stAlert, div.stBlock {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(226, 232, 240, 0.5);
-        border-radius: 20px !important;
-        padding: 24px !important;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-        transition: all 0.3s ease;
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(99, 102, 241, 0.1) !important;
+        border-radius: 24px !important;
+        padding: 28px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    div[data-testid="stMetric"]::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 4px; height: 100%;
+        background: linear-gradient(to bottom, var(--primary), #a5b4fc);
     }
     
     div[data-testid="stMetric"]:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
-        border-color: var(--primary);
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        border-color: rgba(99, 102, 241, 0.3) !important;
     }
 
     /* Metric Refinement */
     div[data-testid="stMetricValue"] {
-        color: #0f172a;
-        font-size: 2.2rem !important;
-        font-weight: 700;
-        letter-spacing: -0.05em;
+        color: #1e293b;
+        font-size: 2.6rem !important;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        background: linear-gradient(45deg, #1e293b, #6366f1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     
-    div[data-testid="stMetricDelta"] {
+    div[data-testid="stMetricLabel"] {
         font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748b;
+        font-size: 0.85rem !important;
+    }
+
+    /* Modern Typography & Headers */
+    h1, h2, h3 {
+        font-weight: 700 !important;
+        letter-spacing: -0.03em !important;
+        color: #0f172a;
     }
 
     /* Professional Sidebar */
     section[data-testid="stSidebar"] {
-        background: white;
-        border-right: 1px solid #e2e8f0;
+        background: var(--sidebar-bg);
+        border-right: 1px solid #f1f5f9;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+    }
+    
+    section[data-testid="stSidebar"] .stRadio > label {
+        font-weight: 600;
+        color: #334155;
     }
 
-    /* Modern Tabs */
+    /* Animated Tabs */
     .stTabs [data-baseweb="tab-list"] {
-        padding: 8px;
-        background: #f1f5f9;
-        border-radius: 16px;
-        margin-bottom: 2rem;
+        padding: 6px;
+        background: #f8fafc;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+        border: 1px solid #edf2f7;
     }
     
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         border: none;
-        color: #64748b;
+        color: #94a3b8;
         font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 12px;
-        transition: 0.2s;
+        padding: 12px 24px;
+        border-radius: 14px;
+        transition: all 0.3s;
     }
     
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
         background: white;
         color: var(--primary) !important;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
     }
 
-    /* Glass Effect Table */
-    .stDataFrame {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    /* Button Glow */
+    /* Button Glow & Pulse */
     .stButton>button {
-        background: var(--primary);
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         color: white;
         border: none;
-        padding: 12px 24px;
-        border-radius: 14px;
-        font-weight: 600;
+        padding: 14px 28px;
+        border-radius: 16px;
+        font-weight: 700;
         box-shadow: 0 4px 14px 0 var(--primary-glow);
-        transition: all 0.2s;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .stButton>button:hover {
-        transform: scale(1.02);
-        background: #2563eb;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
+        background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    }
+
+    /* Sidebar Logo Glow */
+    .sidebar-header {
+        font-size: 1.2rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #1e293b, #6366f1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 3.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -391,12 +428,18 @@ if main_nav == MOD_HOME:
     keyword_count = len(df)
     est_clicks = int(total_vol * 0.08)
     
-    # Executive Metric Row
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Organic Footprint", f"{total_vol:,}", "+12.4%")
-    m2.metric("Market Difficulty", f"{avg_kd}%", "-2.1%", delta_color="inverse")
-    m3.metric("Keywords Tracked", f"{keyword_count:,}", "Stable")
-    m4.metric("Est. Monthly Value", f"₹ {int(est_clicks * 45):,}", "+8.5%")
+    # --- EXECUTIVE PULSE ROW ---
+    st.markdown("<br>", unsafe_allow_html=True)
+    p1, p2, p3, p4 = st.columns(4)
+    
+    with p1:
+        st.metric("Organic Footprint", f"{total_vol:,}", "+12.4%", help="Total monthly search volume attributed to TMU organic results")
+    with p2:
+        st.metric("Avg. Keyword Difficulty", f"{avg_kd}%", "-2.1%", delta_color="inverse", help="Competitive difficulty across target keyword set")
+    with p3:
+        st.metric("Market Dominance (SOV)", "24.2%", "+1.5%", help="Share of voice in the regional education market")
+    with p4:
+        st.metric("Est. Traffic Value", f"₹ {int(est_clicks * 45):,}", "+8.5%", help="Equivalent CPC value of current organic traffic")
 
     st.divider()
 
@@ -810,7 +853,7 @@ elif main_nav == MOD_TECH:
             })
             fig_bot = px.line(bot_data, x="Date", y=["Googlebot", "Bingbot", "Sogou/Other"], 
                             title="Daily Bot Request Volume", template=PLOT_THEME,
-                            color_discrete_sequence=["#3b82f6", "#ef4444", "#64748b"])
+                            color_discrete_sequence=["#6366f1", "#f43f5e", "#94a3b8"])
             st.plotly_chart(fig_bot, use_container_width=True)
             
         with bot_col2:
@@ -821,7 +864,7 @@ elif main_nav == MOD_TECH:
             })
             fig_waste = px.pie(waste_data, values='Waste %', names='Category', hole=0.6,
                              title="Crawl Budget Dilution", template=PLOT_THEME,
-                             color_discrete_sequence=px.colors.sequential.Reds_r)
+                             color_discrete_sequence=px.colors.sequential.Sunset_r)
             st.plotly_chart(fig_waste, use_container_width=True)
             
         st.divider()
@@ -847,7 +890,7 @@ elif main_nav == MOD_TECH:
                     "Count": [1200, 150, 40, 900, 80, 1100, 60, 4500]
                 })
                 fig_sun_tech = px.sunburst(sun_status, path=['Section', 'Status'], values='Count', 
-                                         color='Status', color_discrete_map={'200 OK':'#10b981', '301 Redirect':'#3b82f6', '404 Not Found':'#ef4444'},
+                                         color='Status', color_discrete_map={'200 OK':'#10b981', '301 Redirect':'#6366f1', '404 Not Found':'#f43f5e'},
                                          template=PLOT_THEME)
                 st.plotly_chart(fig_sun_tech, use_container_width=True)
                 
@@ -946,7 +989,7 @@ elif main_nav == MOD_TECH:
                 fig_polar = go.Figure(go.Barpolar(
                     r=speed_scores,
                     theta=sections,
-                    marker_color=["#10b981", "#f59e0b", "#3b82f6", "#10b981", "#ef4444"],
+                    marker_color=["#10b981", "#f59e0b", "#6366f1", "#10b981", "#f43f5e"],
                     opacity=0.8
                 ))
                 fig_polar.update_layout(template=PLOT_THEME, title="Sectional Speed Index", polar=dict(radialaxis=dict(visible=True, range=[0, 100])))
@@ -1118,14 +1161,14 @@ elif main_nav == MOD_KEYWORD:
             # Create a simple clustering by Intent and Volume
             fig_tree = px.treemap(df.head(100), path=[px.Constant("TMU Domain"), 'Intent', 'keyword'], 
                                  values='Volume', color='Keyword Difficulty',
-                                 color_continuous_scale='RdYlGn_r',
+                                 color_continuous_scale='Bluyl',
                                  template=PLOT_THEME, title="Topical Authority Hierarchy")
             st.plotly_chart(fig_tree, use_container_width=True)
             
             st.divider()
             st.markdown("#### ☁️ Keyword Density Cloud")
             kw_text = " ".join(df['keyword'].head(100).astype(str))
-            wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Blues').generate(kw_text)
+            wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='magma').generate(kw_text)
             st.image(wordcloud.to_array(), use_column_width=True)
             
             st.info("💡 **Strategy:** The largest blocks and words represent your primary traffic drivers. Focus on 'Informational' clusters to boost AIO visibility.")
@@ -1163,9 +1206,8 @@ elif main_nav == MOD_KEYWORD:
             
         with g_col2:
             # Visualization of Gap Magnitude
-            fig_gap = px.bar(display_gap, x="Keyword", y=["TMU Rank", "Amity Rank"], 
                             title="Position Gap (Lower is Better)", barmode="group",
-                            template=PLOT_THEME, color_discrete_sequence=["#3b82f6", "#ef4444"])
+                            template=PLOT_THEME, color_discrete_sequence=["#6366f1", "#f43f5e"])
             fig_gap.update_layout(yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig_gap, use_container_width=True)
             
@@ -1186,7 +1228,7 @@ elif main_nav == MOD_KEYWORD:
                 node=dict(
                     pad=15, thickness=20, line=dict(color="black", width=0.5),
                     label=["Organic Search", "Website Leads", "Applicants", "Final Admissions"],
-                    color=["#3b82f6", "#10b981", "#f59e0b", "#ef4444"]
+                    color=["#6366f1", "#10b981", "#f59e0b", "#f43f5e"]
                 ),
                 link=dict(
                     source=[0, 1, 2],
@@ -1302,7 +1344,7 @@ elif main_nav == MOD_CONTENT:
                 delta = {'reference': 75},
                 gauge = {
                     'axis': {'range': [None, 100]},
-                    'bar': {'color': "#3b82f6"},
+                    'bar': {'color': "#6366f1"},
                     'steps' : [
                         {'range': [0, 50], 'color': "#fee2e2"},
                         {'range': [50, 80], 'color': "#fef3c7"},
@@ -1379,7 +1421,7 @@ elif main_nav == MOD_CONTENT:
             # Graph visualization simulation
             dot_link = graphviz.Digraph()
             dot_link.attr(rankdir='TB', size='6,4')
-            dot_link.node('H', 'HUB: Admissions', shape='box', color='#3b82f6')
+            dot_link.node('H', 'HUB: Admissions', shape='box', color='#6366f1')
             dot_link.node('S1', 'Medical P1')
             dot_link.node('S2', 'Eng P2')
             dot_link.node('S3', 'Dental P3')
@@ -1428,7 +1470,7 @@ elif main_nav == MOD_AUTHORITY:
                 "Link Count": [14, 85, 1540]
             })
             fig_tox = px.bar(tox_data, x="Toxicity", y="Link Count", color="Toxicity",
-                             color_discrete_map={"High (DANGER)": "#ef4444", "Medium (Potential)": "#f59e0b", "Low (Safe)": "#10b981"},
+                             color_discrete_map={"High (DANGER)": "#f43f5e", "Medium (Potential)": "#f59e0b", "Low (Safe)": "#10b981"},
                              template=PLOT_THEME)
             st.plotly_chart(fig_tox, use_container_width=True)
             
@@ -1700,7 +1742,7 @@ elif main_nav == MOD_REPORT:
             theta=['Technical Efficiency', 'Content Depth', 'Backlink Authority', 'AI Overview Readiness', 'Mobile Performance']
         ))
         fig_radar = px.line_polar(radar_df, r='r', theta='theta', line_close=True, template=PLOT_THEME, title="TMU SEO Maturity Index")
-        fig_radar.update_traces(fill='toself', line_color='#3b82f6')
+        fig_radar.update_traces(fill='toself', line_color='#6366f1', fillcolor='rgba(99, 102, 241, 0.2)')
         st.plotly_chart(fig_radar, use_container_width=True)
         
         st.info("💡 **Analysis:** Your 'AI Overview Readiness' is world-class at 90%. However, 'Backlink Authority' (60%) is your weakest leg. Focus on niche education collaborations.")
@@ -1749,7 +1791,7 @@ elif main_nav == MOD_REPORT:
             ads_value = [20000, 80000, 250000, 600000, 1200000]
             
             fig_roi = go.Figure()
-            fig_roi.add_trace(go.Scatter(x=months, y=seo_investment, name="SEO Investment", line=dict(color="#ef4444", dash='dash')))
+            fig_roi.add_trace(go.Scatter(x=months, y=seo_investment, name="SEO Investment", line=dict(color="#f43f5e", dash='dash')))
             fig_roi.add_trace(go.Bar(x=months, y=ads_value, name="Traffic Market Value (INR)", marker_color="#10b981"))
             fig_roi.update_layout(title="Organic Value Delta over 12 Months", template=PLOT_THEME)
             st.plotly_chart(fig_roi, use_container_width=True)
