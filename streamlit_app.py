@@ -17,12 +17,19 @@ import re
 from collections import Counter
 
 # --- Asset Management ---
-LOGO_PATH = r"f:\Aradhy\pycham\seo track\logo small black.png"
+LOGO_PATH = "logo small black.png"
 def get_logo():
     try:
-        return Image.open(LOGO_PATH)
+        # Resolve path relative to current script
+        base_path = os.path.dirname(__file__)
+        full_path = os.path.join(base_path, LOGO_PATH)
+        return Image.open(full_path)
     except:
-        return None
+        try:
+            # Fallback for generic environments
+            return Image.open(LOGO_PATH)
+        except:
+            return None
 
 # --- Page Config ---
 st.set_page_config(
@@ -156,8 +163,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Asset Management & Data Loading ---
-LOGO_PATH = r"f:\Aradhy\pycham\seo track\logo small black.png"
-SAMPLE_DATA_PATH = r"f:\Aradhy\pycham\seo track\sample data\advanced_keyword_analysis.csv"
+# Paths are now handled relatively for Streamlit Cloud compatibility
+SAMPLE_DATA_PATH = os.path.join("sample data", "www.tmu.ac.in-organic-keywords-subdomains-a_2025-12-20_14-56-57.csv")
 
 # --- Reusable Data Processor ---
 def process_seo_dataframe(df):
@@ -265,7 +272,8 @@ def load_tmu_data():
         conn.close()
 
         # Fallback to Large Sample Data
-        large_sample = r"f:\Aradhy\pycham\seo track\sample data\www.tmu.ac.in-organic-keywords-subdomains-a_2025-12-20_14-56-57.csv"
+        base_path = os.path.dirname(__file__)
+        large_sample = os.path.join(base_path, "sample data", "www.tmu.ac.in-organic-keywords-subdomains-a_2025-12-20_14-56-57.csv")
         
         if os.path.exists(large_sample):
             # SEMrush exports are often UTF-16 and Tab separated
