@@ -413,11 +413,25 @@ if main_nav == "🏛️ TMU Command Center":
         fig_vis.update_layout(height=300, margin=dict(t=30, b=0, l=10, r=10), template=PLOT_THEME)
         st.plotly_chart(fig_vis, use_container_width=True)
 
-    st.subheader("Growth Prediction Model")
-    baseline = total_vol / 30 if total_vol > 0 else 1000
-    traffic = np.cumsum(np.random.normal(baseline*0.01, baseline*0.005, 90)) + baseline
-    fig_trend = px.area(x=dates, y=traffic, line_shape="spline", template=PLOT_THEME, title="Projected Organic Traffic Growth")
-    st.plotly_chart(fig_trend, use_container_width=True)
+    st.subheader("🧪 Google Ecosystem & Growth Models")
+    v_col1, v_col2 = st.columns([1, 2])
+    
+    with v_col1:
+        st.markdown("#### 🌪️ SERP Volatility Radar")
+        vul_data = pd.DataFrame({
+            "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            "Volatility": [2.4, 4.1, 8.5, 9.2, 5.4, 3.1, 2.9]
+        })
+        fig_vul = px.line(vul_data, x="Day", y="Volatility", r="Volatility", template=PLOT_THEME)
+        st.plotly_chart(px.line(vul_data, x="Day", y="Volatility", title="7-Day Algo Turbulence", line_shape="spline", template=PLOT_THEME), use_container_width=True)
+        if vul_data['Volatility'].max() > 8:
+            st.error("🔥 **High Volatility Detected:** A significant Google update is likely rolling out. Monitor rankings closely.")
+            
+    with v_col2:
+        baseline = total_vol / 30 if total_vol > 0 else 1000
+        traffic = np.cumsum(np.random.normal(baseline*0.01, baseline*0.005, 90)) + baseline
+        fig_trend = px.area(x=dates, y=traffic, line_shape="spline", template=PLOT_THEME, title="Projected Organic Traffic Growth")
+        st.plotly_chart(fig_trend, use_container_width=True)
     
     st.markdown("### ✨ Strategic Executive Insights")
     st.markdown("---")
@@ -689,9 +703,42 @@ elif main_nav == "📦 Data Upload & Growth Engine":
 elif main_nav == "⚙️ Technical SEO Auditor":
     st.title("⚙️ Technical Site Health & Crawl Audit")
     
-    technical_choice = st.selectbox("Select Diagnostic Tool", ["Global Health Audit", "🔍 Deep Page Inspector", "🕸️ Sitemap & Robots Validator"])
+    technical_choice = st.selectbox("Select Diagnostic Tool", ["Global Health Audit", "🔍 Deep Page Inspector", "🕸️ Sitemap & Robots Validator", "🕷️ Bot Crawl Intelligence"])
     
-    if technical_choice == "Global Health Audit":
+    if technical_choice == "🕷️ Bot Crawl Intelligence":
+        st.subheader("🕷️ Server Log & Bot Crawl Intelligence")
+        st.markdown("Analyze how Googlebot and Bingbot are consuming your crawl budget.")
+        
+        bot_col1, bot_col2 = st.columns([2, 1])
+        with bot_col1:
+            # Bot Crawl Frequency Trend
+            dates = pd.date_range(end=datetime.now(), periods=30)
+            bot_data = pd.DataFrame({
+                "Date": dates,
+                "Googlebot": np.random.randint(1200, 2500, 30),
+                "Bingbot": np.random.randint(400, 900, 30),
+                "Sogou/Other": np.random.randint(50, 200, 30)
+            })
+            fig_bot = px.line(bot_data, x="Date", y=["Googlebot", "Bingbot", "Sogou/Other"], 
+                            title="Daily Bot Request Volume", template=PLOT_THEME,
+                            color_discrete_sequence=["#3b82f6", "#ef4444", "#64748b"])
+            st.plotly_chart(fig_bot, use_container_width=True)
+            
+        with bot_col2:
+            st.markdown("#### 🗑️ Crawl Waste Analysis")
+            waste_data = pd.DataFrame({
+                "Category": ["Redirect Loops", "404 Error Hits", "URL Parameters", "Non-Indexable"],
+                "Waste %": [12, 18, 45, 25]
+            })
+            fig_waste = px.pie(waste_data, values='Waste %', names='Category', hole=0.6,
+                             title="Crawl Budget Dilution", template=PLOT_THEME,
+                             color_discrete_sequence=px.colors.sequential.Reds_r)
+            st.plotly_chart(fig_waste, use_container_width=True)
+            
+        st.divider()
+        st.info("💡 **Expert Insight:** Googlebot is spending 45% of its time on faceted URL parameters. Recommend implementing **Dynamic Parameter Handling** in GSC to save crawl budget for Admissions pages.")
+
+    elif technical_choice == "Global Health Audit":
         t_tab1, t_tab2, t_tab3, t_tab4 = st.tabs(["🕷️ Crawl Performance", "🚨 Critical Detectors", "🚀 Core Web Vitals", "⚔️ Cannibalization"])
         
         with t_tab1:
@@ -1104,7 +1151,7 @@ elif main_nav == "🧠 Keyword & AI-Search Lab":
 
 elif main_nav == "📄 Content & On-Page Suite":
     st.title("📄 Content Intelligence & Strategy")
-    o_tab1, o_tab2, o_tab3, o_tab4 = st.tabs(["📝 Brief Generator", "💯 On-Page Score", "📐 Schema Builder", "🏗️ Entity Hub Planner"])
+    o_tab1, o_tab2, o_tab3, o_tab4, o_tab5 = st.tabs(["📝 Brief Generator", "💯 On-Page Score", "📐 Schema Builder", "🏗️ Entity Hub Planner", "🔗 Internal Link Optimizer"])
     
     with o_tab1:
         st.subheader("SEO Content Brief Generator (Writer Tool)")
@@ -1223,6 +1270,35 @@ elif main_nav == "📄 Content & On-Page Suite":
                 st.write("- MBA Corporate Tie-ups 2024")
                 
             st.code("Internal Linking: Point all Spokes to Pillar -> Link Pillar back to All Spokes.", language="text")
+
+    with o_tab5:
+        st.subheader("🔗 Internal Link Optimizer")
+        st.markdown("Boost page rankings by optimizing 'Internal Link Juice' and semantic flow.")
+        
+        il_c1, il_c2 = st.columns([1, 1])
+        with il_c1:
+            st.markdown("#### 🖇️ Semantic Link Recommendations")
+            st.table(pd.DataFrame({
+                "Source Page": ["/btech-cse", "/medical-admission", "/hostel-fees"],
+                "Link To": ["/placements", "/neet-cutoff", "/campus-life"],
+                "Anchor Text": ["CSE Placement Success", "Latest NEET Threshold", "Hostel Virtual Tour"],
+                "Authority Boost": ["+12%", "+18%", "+8%"]
+            }))
+        
+        with il_c2:
+            st.markdown("#### 🕸️ Link Equity Graph")
+            # Graph visualization simulation
+            dot_link = graphviz.Digraph()
+            dot_link.attr(rankdir='TB', size='6,4')
+            dot_link.node('H', 'HUB: Admissions', shape='box', color='#3b82f6')
+            dot_link.node('S1', 'Medical P1')
+            dot_link.node('S2', 'Eng P2')
+            dot_link.node('S3', 'Dental P3')
+            dot_link.edge('H', 'S1'); dot_link.edge('H', 'S2'); dot_link.edge('H', 'S3')
+            dot_link.edge('S1', 'H'); dot_link.edge('S2', 'H'); dot_link.edge('S3', 'H')
+            st.graphviz_chart(dot_link)
+            
+        st.success("Strategy: Creating reciprocal links between Hub and Spokes identified as 'Authority Multiplier'.")
 
 elif main_nav == "🔗 Authority & Outreach":
     st.title("🔗 Authority Builder & Backlink Engine")
