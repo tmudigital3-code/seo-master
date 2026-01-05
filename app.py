@@ -1206,9 +1206,15 @@ elif main_nav == MOD_KEYWORD:
             
         with g_col2:
             # Visualization of Gap Magnitude
-            fig_gap = px.bar(display_gap, x="Keyword", y=["TMU Rank", "Amity Rank"],
-                            title="Position Gap (Lower is Better)", barmode="group",
-                            template=PLOT_THEME, color_discrete_sequence=["#6366f1", "#f43f5e"])
+            fig_gap = px.bar(
+                display_gap, 
+                x="Keyword", 
+                y=["TMU Rank", "Amity Rank"],
+                title="Position Gap (Lower is Better)", 
+                barmode="group",
+                template=PLOT_THEME, 
+                color_discrete_sequence=["#6366f1", "#f43f5e"]
+            )
             fig_gap.update_layout(yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig_gap, use_container_width=True)
             
