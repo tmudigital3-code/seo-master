@@ -16,6 +16,13 @@ from bs4 import BeautifulSoup
 import re
 from collections import Counter
 
+try:
+    import graphviz
+    HAS_GRAPHVIZ = True
+except ImportError:
+    HAS_GRAPHVIZ = False
+
+
 # --- Asset Management ---
 LOGO_PATH = "logo small black.png"
 def get_logo():
@@ -1055,25 +1062,30 @@ elif main_nav == MOD_TECH:
         st.markdown("Visualizing the relationship between your root infrastructure and index instructions.")
         
         # Infrastructure Connectivity Map using Graphviz
-        try:
-            import graphviz
-            dot = graphviz.Digraph(comment='TMU SEO Infrastructure')
-            dot.attr(rankdir='LR', size='8,5')
-            dot.node('R', 'Root Domain (tmu.ac.in)', shape='doublecircle', color='#3b82f6')
-            dot.node('RO', 'Robots.txt', shape='box', color='#ef4444')
-            dot.node('S', 'Sitemap.xml Index', shape='box', color='#10b981')
-            dot.node('S1', 'Admission Sitemap', color='#10b981')
-            dot.node('S2', 'Medical Sitemap', color='#10b981')
-            dot.node('S3', 'Content/Blog Sitemap', color='#10b981')
-            
-            dot.edge('R', 'RO')
-            dot.edge('RO', 'S', label='Discovers')
-            dot.edge('S', 'S1')
-            dot.edge('S', 'S2')
-            dot.edge('S', 'S3')
-            
-            st.graphviz_chart(dot)
-        except:
+        if HAS_GRAPHVIZ:
+            try:
+                dot = graphviz.Digraph(comment='TMU SEO Infrastructure')
+                dot.attr(rankdir='LR', size='8,5')
+                dot.node('R', 'Root Domain (tmu.ac.in)', shape='doublecircle', color='#3b82f6')
+                dot.node('RO', 'Robots.txt', shape='box', color='#ef4444')
+                dot.node('S', 'Sitemap.xml Index', shape='box', color='#10b981')
+                dot.node('S1', 'Admission Sitemap', color='#10b981')
+                dot.node('S2', 'Medical Sitemap', color='#10b981')
+                dot.node('S3', 'Content/Blog Sitemap', color='#10b981')
+                
+                dot.edge('R', 'RO')
+                dot.edge('RO', 'S', label='Discovers')
+                dot.edge('S', 'S1')
+                dot.edge('S', 'S2')
+                dot.edge('S', 'S3')
+                
+                st.graphviz_chart(dot)
+            except Exception as e:
+                st.info(f"Graphviz rendering issue: {e}. Showing connectivity list instead.")
+                st.write("- **Root:** tmu.ac.in -> **Robots.txt** discovered.")
+                st.write("- **Robots.txt** -> Points to **Sitemap Index**.")
+                st.write("- **Sitemap Index** -> Contains 4 sub-sitemaps (Academic, Medical, Dental, Blog).")
+        else:
             st.info("Graphviz not available. Showing connectivity list instead.")
             st.write("- **Root:** tmu.ac.in -> **Robots.txt** discovered.")
             st.write("- **Robots.txt** -> Points to **Sitemap Index**.")
@@ -1426,15 +1438,23 @@ elif main_nav == MOD_CONTENT:
         with il_c2:
             st.markdown("#### 🕸️ Link Equity Graph")
             # Graph visualization simulation
-            dot_link = graphviz.Digraph()
-            dot_link.attr(rankdir='TB', size='6,4')
-            dot_link.node('H', 'HUB: Admissions', shape='box', color='#6366f1')
-            dot_link.node('S1', 'Medical P1')
-            dot_link.node('S2', 'Eng P2')
-            dot_link.node('S3', 'Dental P3')
-            dot_link.edge('H', 'S1'); dot_link.edge('H', 'S2'); dot_link.edge('H', 'S3')
-            dot_link.edge('S1', 'H'); dot_link.edge('S2', 'H'); dot_link.edge('S3', 'H')
-            st.graphviz_chart(dot_link)
+            if HAS_GRAPHVIZ:
+                try:
+                    dot_link = graphviz.Digraph()
+                    dot_link.attr(rankdir='TB', size='6,4')
+                    dot_link.node('H', 'HUB: Admissions', shape='box', color='#6366f1')
+                    dot_link.node('S1', 'Medical P1')
+                    dot_link.node('S2', 'Eng P2')
+                    dot_link.node('S3', 'Dental P3')
+                    dot_link.edge('H', 'S1'); dot_link.edge('H', 'S2'); dot_link.edge('H', 'S3')
+                    dot_link.edge('S1', 'H'); dot_link.edge('S2', 'H'); dot_link.edge('S3', 'H')
+                    st.graphviz_chart(dot_link)
+                except Exception as e:
+                    st.info(f"Graphviz rendering issue: {e}")
+                    st.image("https://images.unsplash.com/photo-1551288049-bbbda546697c?q=80&w=2070&auto=format&fit=crop", caption="Link Equity Visualization (Fallback)")
+            else:
+                st.info("Graphviz not available for visualization.")
+                st.image("https://images.unsplash.com/photo-1551288049-bbbda546697c?q=80&w=2070&auto=format&fit=crop", caption="Link Equity Visualization (Fallback)")
             
         st.success("Strategy: Creating reciprocal links between Hub and Spokes identified as 'Authority Multiplier'.")
 
